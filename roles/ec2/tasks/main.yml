@@ -1,0 +1,3 @@
+---
+- include: insert_key.yml
+- include: launch_instance.yml

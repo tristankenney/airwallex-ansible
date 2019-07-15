@@ -1,0 +1,16 @@
+- name: Create public route table
+  ec2_vpc_route_table:
+    state: present
+    aws_access_key: "{{ air_aws_access_key }}"
+    aws_secret_key: "{{ air_aws_secret_key }}"
+    vpc_id: "{{ air_vpc.id }}"
+    region: "{{ air_aws_region }}"
+    tags:
+      Name: "{{ air_app_name }}_public_rt"
+    subnets: 
+      - "{{ air_subnet.subnet_id }}"
+    routes:
+      - dest: "{{ air_vpc_cidr_start }}/16"
+        gateway_id: "local"
+      - dest: 0.0.0.0/0
+        gateway_id: "{{ air_igw.internet_gateway_id }}"

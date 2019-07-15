@@ -1,0 +1,11 @@
+[Unit]
+Description=Monitor resources of nginx container
+After=nginx-container.service
+
+[Service]
+Type=simple
+ExecStart=/bin/bash /usr/bin/nginx-container-resource.sh
+
+[Install]
+WantedBy=multi-user.target
+Restart=always

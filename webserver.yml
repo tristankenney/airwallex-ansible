@@ -1,0 +1,20 @@
+---
+- name: Create AWS network and Launch Instance
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  roles:
+    - vpc
+    - iam
+    - role: ec2 
+      vars:
+        air_ec2_name: "{{ air_app_name }}_nginx"
+        air_ec2_security_group: "{{ air_app_name }}_sg_webserver"
+        air_ec2_group: webserver  
+- name: Provision EC2 instance as nginx
+  hosts: webserver
+  become: true
+  roles: 
+    - role: nginx
+      vars: 
+        air_ec2_group: webserver  

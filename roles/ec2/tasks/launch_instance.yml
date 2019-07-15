@@ -1,0 +1,46 @@
+---
+- name: Locate AMI
+  ec2_ami_facts:
+    aws_access_key: "{{ air_aws_access_key }}"
+    aws_secret_key: "{{ air_aws_secret_key }}"
+    region: "{{ air_aws_region }}"
+    owners: 099720109477
+    filters:
+      name: "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"
+  register: ec2_ami_facts_result
+  
+- name: Launch instance
+  ec2_instance:
+    state: running
+    aws_access_key: "{{ air_aws_access_key }}"
+    aws_secret_key: "{{ air_aws_secret_key }}"
+    region: "{{ air_aws_region }}"
+    instance_type: t2.micro
+    image_id: "{{ ec2_ami_facts_result.images.0.image_id }}"
+    security_group: "{{ air_ec2_security_group }}"
+    wait: yes
+    name: "{{ air_ec2_name }}"
+    vpc_subnet_id: "{{ air_subnet.subnet_id }}"
+    instance_role: "{{ air_app_name }}_{{ air_ec2_group }}_iam_role"
+    network:
+        assign_public_ip: true
+    tags: 
+        Group: "{{ air_ec2_group }}"
+    key_name: "{{ air_app_name }}_key"
+
+- name: Lookup instance
+  ec2_instance_facts:
+    aws_access_key: "{{ air_aws_access_key }}"
+    aws_secret_key: "{{ air_aws_secret_key }}"
+    region: "{{ air_aws_region }}"
+    filters: 
+      "tag:Group" : "{{ air_ec2_group }}"
+      instance-state-name: running
+  register: ec2_instance_facts_result
+
+- name: Add Host to inventory ({{ air_ec2_group }})
+  add_host:
+    group: "{{ air_ec2_group }}"
+    name: "{{ ec2_instance_facts_result.instances.0.public_ip_address }}"
+    ansible_user: ubuntu
+    ansible_python_interpreter: /usr/bin/python3

@@ -1,0 +1,10 @@
+- name: Create webserver IAM role
+  iam_role:
+      name: "{{ air_app_name}}_webserver_iam_role" 
+      aws_access_key: "{{ air_aws_access_key }}"
+      aws_secret_key: "{{ air_aws_secret_key }}"
+      region: "{{ air_aws_region }}"
+      assume_role_policy_document: "{{ lookup('file','ec2_trust_policy.json') }}"
+      managed_policy: 
+        - arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy
+      state: present 

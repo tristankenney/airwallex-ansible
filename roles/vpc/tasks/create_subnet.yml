@@ -1,0 +1,49 @@
+---
+- name: Create IGW within VPC
+  ec2_vpc_igw:
+    state: present
+    aws_access_key: "{{ air_aws_access_key }}"
+    aws_secret_key: "{{ air_aws_secret_key }}"
+    vpc_id: "{{ air_vpc.id }}"
+    region: "{{ air_aws_region }}"
+    tags: 
+      Name: "{{ air_app_name }}_igw"
+
+- name: Lookup IGW details
+  ec2_vpc_igw_facts:
+    aws_access_key: "{{ air_aws_access_key }}"
+    aws_secret_key: "{{ air_aws_secret_key }}"
+    region: "{{ air_aws_region }}"
+    filters: 
+      "tag:Name" : "{{ air_app_name }}_igw"
+  register:  ec2_vpc_igw_facts_result
+
+- name: Capture IGW details
+  set_fact:
+    air_igw: "{{ ec2_vpc_igw_facts_result.internet_gateways[0] }}"
+
+- name: Create public subnet
+  ec2_vpc_subnet:
+    state: present
+    aws_access_key: "{{ air_aws_access_key }}"
+    aws_secret_key: "{{ air_aws_secret_key }}"
+    region: "{{ air_aws_region }}"
+    vpc_id: "{{ air_vpc.id }}"
+    az: "{{ air_aws_region }}{{ air_subnet_conf['az'] }}"
+    cidr: "{{ air_subnet_conf['cidr'] }}"
+    tags:
+      Name: "{{ air_app_name }}_subnet_az{{ air_subnet_conf['az'] }}"
+      Group: "{{ air_app_name }}_public"
+
+- name: Lookup Subnet
+  ec2_vpc_subnet_facts:
+    aws_access_key: "{{ air_aws_access_key }}"
+    aws_secret_key: "{{ air_aws_secret_key }}"
+    region: "{{ air_aws_region }}"
+    filters: 
+      "tag:Group" : "{{ air_app_name }}_public"
+  register:  ec2_vpc_subnet_facts
+
+- name: Capture Subnet
+  set_fact:
+    air_subnet: "{{ ec2_vpc_subnet_facts.subnets[0] }}"

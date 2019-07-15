@@ -1,0 +1,11 @@
+---
+air_app_name: airwallex_devops_test
+air_aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+air_aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+air_aws_pub: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"
+air_aws_region: us-east-1
+air_vpc_cidr: 10.10.0.0/16
+air_vpc_cidr_start: 10.10.0.0
+air_subnet_conf:
+  az: a
+  cidr: 10.10.0.0/24

@@ -1,0 +1,10 @@
+---
+- name: Update fstab
+  copy:
+    src: fstab
+    dest: /etc/fstab
+
+- name: Remount filesystems
+  command: mount -a
+  args:
+    warn: false

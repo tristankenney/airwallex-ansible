@@ -1,0 +1,8 @@
+---
+- include: install_ansible_requirements.yml
+- include: secure_shared_memory.yml
+- include: install_cloud_watch_agent.yml
+- include: install_fail2ban.yml
+- include: install_docker.yml
+- include: install_nginx.yml
+- include: log_nginx.yml

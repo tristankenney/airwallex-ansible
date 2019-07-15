@@ -1,0 +1,13 @@
+---
+- name: Install CloudWatch agent
+  apt:
+    deb: https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
+
+- name: Set CloudWatch Config
+  copy:
+    src: "amazon-cloudwatch-agent.json"
+    dest: "/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json"
+
+- name: Start CloudWatch agent
+  command: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -m ec2 -a start
+

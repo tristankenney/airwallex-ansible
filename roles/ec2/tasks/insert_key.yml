@@ -1,0 +1,9 @@
+---
+- name: "Insert Key Pair"
+  ec2_key:
+    state: present
+    name: "{{ air_app_name }}_key"
+    key_material: "{{ air_aws_pub }}"
+    aws_access_key: "{{ air_aws_access_key }}"
+    aws_secret_key: "{{ air_aws_secret_key }}"
+    region: "{{ air_aws_region }}"

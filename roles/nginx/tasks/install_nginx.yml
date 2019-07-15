@@ -1,0 +1,25 @@
+---
+- name: Install service 
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  loop: 
+    - {src: nginx-container.service, dest: /etc/systemd/system/nginx-container.service}
+    - {src: nginx-container-resource.sh, dest: /usr/bin/nginx-container-resource.sh}
+    - {src: nginx-container-exec.sh, dest: /usr/bin/nginx-container-exec.sh}
+    - {src: nginx-container-preexec.sh, dest: /usr/bin/nginx-container-preexec.sh}
+    - {src: nginx-container-resource.service, dest: /etc/systemd/system/nginx-container-resource.service}
+    
+- name: Ensure nginx container is running
+  systemd:
+    name: nginx-container.service  
+    enabled: yes 
+    state: started 
+    
+- name: Ensure nginx container resource monitoring is running
+  systemd:
+    name: nginx-container-resource.service  
+    enabled: yes 
+    state: started 
+    
+

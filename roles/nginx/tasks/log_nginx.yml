@@ -1,0 +1,26 @@
+---
+- name: Lookup instance
+  ec2_instance_facts:
+    aws_access_key: "{{ air_aws_access_key }}"
+    aws_secret_key: "{{ air_aws_secret_key }}"
+    region: "{{ air_aws_region }}"
+    filters: 
+      "tag:Group" : "{{ air_ec2_group }}"
+      instance-state-name: running
+  register: ec2_instance_facts_result
+
+- name: Capture instance
+  set_fact:
+    air_ec2_instance: "{{ ec2_instance_facts_result.instances.0 }}"
+
+- name: Capture output
+  set_fact:
+    air_nginx_output: "{{ lookup('url', ['http://', air_ec2_instance.public_dns_name]|join())}}"
+
+- name: Log output 
+  debug: 
+      msg: "{{ air_nginx_output }}"
+
+- name: Log word frequencies 
+  debug: 
+      msg: "{{ air_nginx_output|word_frequencies(1) }}"

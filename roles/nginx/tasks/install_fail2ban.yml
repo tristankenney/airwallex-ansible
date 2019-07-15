@@ -1,0 +1,16 @@
+---
+- name: Install fail2ban
+  apt:
+    name: fail2ban
+    update_cache: yes
+
+- name: Update fail2ban conf
+  copy:
+    src: jail.local
+    dest: /etc/fail2ban/jail.local
+    
+- name: Start fail2ban
+  systemd:
+    state: restarted
+    name: fail2ban
+    

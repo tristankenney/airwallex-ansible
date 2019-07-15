@@ -1,0 +1,31 @@
+---
+- name: Lookup Gateway IP 
+  ipify_facts:
+  register: public_ip
+
+- name: Capture Gateway IP
+  set_fact:
+    air_control_ip: "{{ public_ip.ansible_facts.ipify_public_ip }}"
+
+- name: Create webserver security group
+  ec2_group:
+    state: present
+    name: "{{ air_app_name }}_sg_webserver"
+    description: Webserver security group
+    vpc_id: "{{ air_vpc.id }}"
+    region: "{{ air_aws_region }}"
+    aws_access_key: "{{ air_aws_access_key }}"
+    aws_secret_key: "{{ air_aws_secret_key }}"
+    rules:
+      - proto: tcp
+        from_port: 80
+        to_port: 80
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: "{{ air_control_ip }}/32"
+      - proto: icmp
+        from_port: 8 
+        to_port:  -1 
+        cidr_ip: "{{ air_control_ip }}/32"

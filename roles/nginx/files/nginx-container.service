@@ -1,0 +1,12 @@
+[Unit]
+Description=Containerised nginx service
+
+[Service]
+Type=simple
+ExecStartPre=/bin/bash /usr/bin/nginx-container-preexec.sh
+ExecStart=/bin/bash /usr/bin/nginx-container-exec.sh
+ExecStartPost=/bin/bash /usr/bin/nginx-container-postexec.sh
+
+[Install]
+WantedBy=multi-user.target
+Restart=always
