@@ -12,6 +12,7 @@
     
 - name: Ensure nginx container is running
   systemd:
+    daemon_reload: yes
     name: nginx-container.service  
     enabled: yes 
     state: started 
