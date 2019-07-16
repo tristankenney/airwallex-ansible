@@ -5,11 +5,15 @@
       - unattended-upgrades
       - aptitude
       
-- name: Upgrade packages    
+- name: Upgrade packages  
   apt:
     update_cache: yes
     upgrade: safe
+  register: upgrade_result
 
 - name: Generate Locale
   command: locale-gen en_AU.UTF-8
 
+- name: Reboot to apply packages
+  reboot:
+  
