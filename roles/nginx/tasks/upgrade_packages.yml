@@ -1,0 +1,15 @@
+---
+- name: Install unattened-upgrades
+  apt:
+    name: 
+      - unattended-upgrades
+      - aptitude
+      
+- name: Upgrade packages    
+  apt:
+    update_cache: yes
+    upgrade: safe
+
+- name: Generate Locale
+  command: locale-gen en_AU.UTF-8
+
