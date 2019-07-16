@@ -16,4 +16,5 @@
 
 - name: Reboot to apply packages
   reboot:
-  
+  when: "'No packages will be installed' not in upgrade_result.stdout"
+    

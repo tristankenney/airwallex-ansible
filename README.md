@@ -1,7 +1,7 @@
 # airwallex-ansible
 
 ## Pre-reqs
-1. Install [Docker](https://docs.docker.com/install/)
+Install [Docker](https://docs.docker.com/install/)
 
 ## Usage
 
